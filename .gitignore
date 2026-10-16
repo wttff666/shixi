@@ -1,0 +1,27 @@
+# 虚拟环境与 Python 缓存
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# 运行时数据（数据库、上传文件、OCR 中间结果、日志）
+app/data/app.db
+app/data/test_app.db
+app/data/uploads/
+app/data/ocr/
+app/data/test_uploads/
+app/data/test_ocr/
+app/data/server.log
+app/data/server.log.error
+app/data/server.pid
+app/data/diagnosis-eval.json
+
+# 本地配置（含 API 密钥，严禁提交）
+app/.env
+
+# 编辑器与系统文件
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+*.log

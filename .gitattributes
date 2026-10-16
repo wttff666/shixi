@@ -1,0 +1,11 @@
+# 统一换行符，避免 Windows 与 Linux 之间反复出现整文件改动
+* text=auto
+
+# Windows 脚本保持 CRLF
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+
+# 数据文件与二进制不做换行转换
+*.csv text eol=lf
+*.png binary
+*.db binary

@@ -1,0 +1,3 @@
+# 仅在切换到 PostgreSQL + pgvector 时需要安装。
+# 安装：..\.venv\Scripts\python.exe -m pip install -r .\requirements-postgres.txt
+psycopg[binary]>=3.2,<4

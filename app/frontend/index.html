@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>诊断工作台 · 远程诊断客服平台</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/workbench.css">
+</head>
+<body>
+  <div class="wb">
+    <aside class="wb-nav">
+      <a class="wb-brand" href="/">
+        <span class="brand-mark">诊</span>
+        <b>远程诊断客服平台<small>注塑机产品线</small></b>
+      </a>
+
+      <div class="wb-nav-title">工作台</div>
+      <a class="wb-nav-item" href="/service">服务工单 <span class="badge badge-info" id="queueBadge">0</span></a>
+      <a class="wb-nav-item active" href="/">诊断会话</a>
+
+      <div class="wb-nav-title">资料</div>
+      <a class="wb-nav-item" href="/documents" data-internal>知识库与资料</a>
+      <a class="wb-nav-item" href="/skills" data-internal>诊断 Skill</a>
+      <a class="wb-nav-item" href="/users" data-sysadmin>用户管理</a>
+
+      <div class="wb-nav-title">我的工单</div>
+      <div class="wb-queue" id="queue"></div>
+
+      <button id="logoutButton" class="wb-logout" type="button">退出登录</button>
+    </aside>
+
+    <main class="wb-main">
+      <header class="wb-head">
+        <div>
+          <h1 id="headTitle">未选择工单</h1>
+          <div class="sub" id="headSub">从左侧选择工单，或直接输入客户描述发起诊断</div>
+          <div class="wb-tags" id="headTags"></div>
+        </div>
+        <div class="wb-actions">
+          <select id="answerMode" aria-label="回答长度">
+            <option value="brief">简要</option>
+            <option value="standard" selected>标准</option>
+            <option value="detailed">详细</option>
+          </select>
+          <select id="skillSelect" aria-label="选择 Skill">
+            <option value="">自动匹配 Skill</option>
+          </select>
+          <span id="modelState" class="badge badge-low">连接中</span>
+          <button id="newChatButton" class="btn" type="button">新建会话</button>
+        </div>
+      </header>
+
+      <div class="wb-progress" id="progress">
+        <div class="step" data-step="1"><span class="dot">1</span><span>读取设备与保修</span></div>
+        <div class="step-bar" data-bar="1"></div>
+        <div class="step" data-step="2"><span class="dot">2</span><span>查询实时报警</span></div>
+        <div class="step-bar" data-bar="2"></div>
+        <div class="step" data-step="3"><span class="dot">3</span><span>检索手册与通报</span></div>
+        <div class="step-bar" data-bar="3"></div>
+        <div class="step" data-step="4"><span class="dot">4</span><span>生成诊断结论</span></div>
+      </div>
+
+      <div class="wb-cols">
+        <section class="card wb-chat">
+          <div class="chat-head">
+            <span class="avatar" id="chatAvatar">客</span>
+            <b id="chatTitle">客户口述</b>
+            <span id="chatMeta">等待输入</span>
+          </div>
+          <div class="stream" id="messages" aria-live="polite"></div>
+          <form class="composer" id="composer">
+            <label class="sr-only" for="questionInput">客户描述</label>
+            <textarea id="questionInput" rows="1" placeholder="输入客户描述，或追问客户后继续研判…"></textarea>
+            <div class="composer-row">
+              <span id="statusText">检索范围：已发布知识库</span>
+              <div class="composer-actions">
+                <button id="stopButton" class="btn" type="button" hidden>停止</button>
+                <button id="sendButton" class="btn btn-primary" type="submit">发起诊断</button>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <aside class="wb-side">
+          <section class="card" id="verdictCard">
+            <div class="card-pad">
+              <div class="kicker">诊断结论</div>
+              <div class="empty-note" id="verdictEmpty">尚未发起诊断</div>
+              <div id="verdictBody" hidden></div>
+            </div>
+          </section>
+
+          <section class="card" id="dispatchCard" hidden>
+            <div class="card-head">
+              <h3>派工建议</h3>
+              <span id="dispatchFlag"></span>
+            </div>
+            <div class="card-body" id="dispatchBody"></div>
+          </section>
+
+          <section class="card internal-block" id="internalCard" hidden>
+            <div class="card-head">
+              <h3>内部备注</h3>
+              <span class="tag-internal">仅内部 · 勿外发</span>
+            </div>
+            <ul id="internalBody"></ul>
+          </section>
+
+          <section class="card reply-block" id="replyCard" hidden>
+            <div class="card-head">
+              <h3>对客户说明</h3>
+              <button class="btn" type="button" id="copyReply">复制</button>
+            </div>
+            <pre id="replyBody"></pre>
+          </section>
+
+          <section class="card" id="refsCard" hidden>
+            <div class="card-head">
+              <h3>依据引用</h3>
+              <span class="badge badge-low" id="refCount">0</span>
+            </div>
+            <ul class="refs" id="refBody"></ul>
+          </section>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" role="status"></div>
+  <script src="/data.js"></script>
+  <script src="/api.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>服务门户 · 远程诊断客服平台</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/workbench.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="/portal">
+        <span class="brand-mark">诊</span>
+        <span class="brand-copy">
+          <strong>远程诊断客服平台</strong>
+          <small>客户服务门户</small>
+        </span>
+      </a>
+      <section class="admin-note">
+        <strong id="portalCustomer">客户</strong>
+        <p>此处仅供查询本企业设备档案与服务记录。</p>
+      </section>
+      <button id="logoutButton" class="logout-button" type="button">退出登录</button>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-header">
+        <div>
+          <span class="eyebrow">Customer Portal · Read Only</span>
+          <h1>服务门户</h1>
+          <p>查看本企业在用设备的档案与保修状态，以及提交过的服务记录与我们的处理反馈。</p>
+        </div>
+        <button id="refreshPortal" class="secondary-button" type="button">刷新</button>
+      </header>
+
+      <section class="admin-grid">
+        <article class="panel documents-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">01 · 在用设备</span>
+              <h2>设备档案与保修</h2>
+            </div>
+          </div>
+          <div id="portalMachines" class="document-list"></div>
+        </article>
+
+        <article class="panel documents-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">02 · 服务记录</span>
+              <h2>提交与处理情况</h2>
+            </div>
+          </div>
+          <div id="portalRequests" class="document-list"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" role="status"></div>
+  <script src="/api.js"></script>
+  <script src="/portal.js"></script>
+</body>
+</html>

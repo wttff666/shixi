@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>用户管理 · 远程诊断客服平台</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="/">
+        <span class="brand-mark">诊</span>
+        <span class="brand-copy">
+          <strong>远程诊断客服平台</strong>
+          <small>系统管理</small>
+        </span>
+      </a>
+      <a class="new-chat" href="/">返回对话</a>
+      <nav class="admin-nav">
+        <a href="/service">服务工单</a>
+        <a href="/documents">知识库与资料</a>
+        <a href="/skills">诊断 Skill</a>
+        <a class="active" href="/users">用户管理</a>
+      </nav>
+      <button id="logoutButton" class="logout-button" type="button">退出登录</button>
+      <section class="admin-note">
+        <strong>账号安全</strong>
+        <p>停用账号或重置密码会立即清除该用户登录会话。</p>
+      </section>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-header">
+        <div>
+          <span class="eyebrow">Identity &amp; Access</span>
+          <h1>用户管理</h1>
+          <p>创建用户、调整角色、重置密码和强制退出登录。</p>
+        </div>
+        <button id="refreshUsers" class="secondary-button" type="button">刷新</button>
+      </header>
+
+      <section class="admin-grid">
+        <article class="panel upload-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">01 · CREATE</span>
+              <h2>新建用户</h2>
+              <p>新用户首次登录时必须修改密码。</p>
+            </div>
+          </div>
+          <form id="userForm" class="upload-form">
+            <div class="form-grid">
+              <label>
+                <span>用户名</span>
+                <input id="newUsername" autocomplete="off">
+              </label>
+              <label>
+                <span>初始密码</span>
+                <input id="newPassword" type="password" autocomplete="new-password">
+              </label>
+              <label>
+                <span>角色</span>
+                <select id="newRole">
+                  <option value="agent">客服工程师</option>
+                  <option value="tech">技术支持工程师</option>
+                  <option value="field">现场服务工程师</option>
+                  <option value="kb_admin">知识库管理员</option>
+                  <option value="supervisor">服务主管</option>
+                  <option value="sys_admin">系统管理员</option>
+                  <option value="customer">客户联系人</option>
+                </select>
+              </label>
+              <label>
+                <span>绑定客户（客户联系人必填）</span>
+                <input id="newCustomer" autocomplete="off" placeholder="如：镇江精工注塑厂">
+              </label>
+            </div>
+            <button class="send-button" type="submit">创建用户</button>
+          </form>
+        </article>
+
+        <article class="panel documents-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">02 · USERS</span>
+              <h2>用户列表</h2>
+              <p>停用后用户无法登录，已有会话立即失效。</p>
+            </div>
+          </div>
+          <div id="userList" class="document-list"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="/api.js"></script>
+  <script src="/users.js"></script>
+</body>
+</html>

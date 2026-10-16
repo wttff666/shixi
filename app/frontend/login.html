@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>登录 · 远程诊断客服平台</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="login-page">
+  <main class="login-shell">
+    <section class="login-brand">
+      <div class="brand-mark">诊</div>
+      <span class="eyebrow">RemoteDiag · After-sales Support</span>
+      <h1>远程诊断客服平台</h1>
+      <p>设备远程诊断、知识库维护与诊断 Skill 管理都从这里进入。</p>
+    </section>
+    <form id="loginForm" class="login-card">
+      <div>
+        <span class="section-kicker">SIGN IN</span>
+        <h2>登录</h2>
+      </div>
+      <label>
+        <span>用户名</span>
+        <input id="username" name="username" autocomplete="username" autofocus>
+      </label>
+      <label>
+        <span>密码</span>
+        <input id="password" name="password" type="password" autocomplete="current-password">
+      </label>
+      <button class="send-button" type="submit">进入系统</button>
+      <p id="loginError" class="error-text"></p>
+    </form>
+  </main>
+  <script src="/api.js"></script>
+  <script src="/login.js"></script>
+</body>
+</html>

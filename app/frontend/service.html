@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>服务工单 · 远程诊断客服平台</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/workbench.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="/">
+        <span class="brand-mark">诊</span>
+        <span class="brand-copy">
+          <strong>远程诊断客服平台</strong>
+          <small>服务工单台</small>
+        </span>
+      </a>
+      <a class="new-chat" href="/">返回诊断工作台</a>
+      <nav class="admin-nav">
+        <a class="active" href="/service">服务工单</a>
+        <a href="/documents">知识库与资料</a>
+        <a href="/skills">诊断 Skill</a>
+        <a href="/users" data-sysadmin>用户管理</a>
+      </nav>
+      <button id="logoutButton" class="logout-button" type="button">退出登录</button>
+      <section class="admin-note">
+        <strong>工单状态</strong>
+        <p>待研判 → 待派工 → 已派工 → 已关闭。诊断结论会自动回写到工单。</p>
+      </section>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-header">
+        <div>
+          <span class="eyebrow">Service Desk · Request Lifecycle</span>
+          <h1>服务工单</h1>
+          <p>接单后在诊断工作台完成研判，结论、派工建议与对客户话术会写回本工单。</p>
+        </div>
+        <button id="refreshRequests" class="secondary-button" type="button">刷新</button>
+      </header>
+
+      <section class="admin-grid">
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">01 · 新建工单</span>
+              <h2>登记客户来电</h2>
+            </div>
+          </div>
+          <form id="createForm" class="form-grid">
+            <label>
+              <span>客户</span>
+              <select id="newCustomer"></select>
+            </label>
+            <label>
+              <span>设备</span>
+              <select id="newMachine"></select>
+            </label>
+            <label>
+              <span>来源</span>
+              <select id="newChannel"></select>
+            </label>
+            <label>
+              <span>优先级</span>
+              <select id="newPriority"></select>
+            </label>
+            <label class="form-wide">
+              <span>现象描述</span>
+              <textarea id="newSymptom" rows="3" placeholder="客户口述的现象，例如：油温高报警，运行两个多小时后触发"></textarea>
+            </label>
+            <button class="send-button" type="submit">创建工单</button>
+          </form>
+        </article>
+
+        <article class="panel documents-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">02 · 工单列表</span>
+              <h2>待处理与已处理</h2>
+            </div>
+            <select id="statusFilter" class="skill-select">
+              <option value="">全部状态</option>
+            </select>
+          </div>
+          <div id="requestList" class="document-list"></div>
+        </article>
+      </section>
+
+      <article class="panel" id="detailPanel" hidden>
+        <div class="panel-heading">
+          <div>
+            <span class="section-kicker">03 · 工单详情</span>
+            <h2 id="detailTitle">工单</h2>
+          </div>
+          <div class="document-actions" id="detailActions"></div>
+        </div>
+        <div id="detailBody"></div>
+      </article>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" role="status"></div>
+  <script src="/api.js"></script>
+  <script src="/service.js"></script>
+</body>
+</html>

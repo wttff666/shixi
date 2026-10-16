@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>诊断 Skill · 远程诊断客服平台</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="/">
+        <span class="brand-mark">诊</span>
+        <span class="brand-copy">
+          <strong>远程诊断客服平台</strong>
+          <small>诊断 Skill</small>
+        </span>
+      </a>
+      <a class="new-chat" href="/">返回对话</a>
+      <nav class="admin-nav">
+        <a href="/service">服务工单</a>
+        <a href="/documents">知识库与资料</a>
+        <a class="active" href="/skills">诊断 Skill</a>
+        <a href="/users" data-sysadmin>用户管理</a>
+      </nav>
+      <button id="logoutButton" class="logout-button" type="button">退出登录</button>
+      <section class="admin-note">
+        <strong>声明式 Skill</strong>
+        <p>接受 JSON、Markdown 或含 skill.json 的 ZIP，只做声明式约束，不执行上传代码。</p>
+      </section>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-header">
+        <div>
+          <span class="eyebrow">Declarative Skill Center</span>
+          <h1>Skill 管理</h1>
+          <p>上传约束配置，规定查询范围、工具权限、输入输出和回答方式。</p>
+        </div>
+        <button id="refreshSkills" class="secondary-button" type="button">刷新</button>
+      </header>
+
+      <section class="admin-grid">
+        <article class="panel upload-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">01 · UPLOAD</span>
+              <h2>上传 Skill</h2>
+              <p>上传单个 JSON 文件。新版 Skill 会先进入草稿状态。</p>
+            </div>
+          </div>
+          <form id="skillForm" class="upload-form">
+            <label id="skillDropZone" class="drop-zone" for="skillFile">
+              <input id="skillFile" name="file" type="file" accept=".json,.md,.zip,application/json,text/markdown" hidden>
+              <strong>选择或拖入 Skill 文件</strong>
+              <span>支持单个 JSON、单个 Markdown，或包含 skill.json 与 SKILL.md 的 ZIP 包</span>
+              <em id="selectedSkillFile">尚未选择文件</em>
+            </label>
+            <button id="skillUploadButton" class="send-button" type="submit">上传 Skill</button>
+          </form>
+          <div class="skill-spec">
+            <strong>声明式约束包含</strong>
+            <span>查询范围</span><span>允许工具</span><span>输入结构</span><span>输出结构</span><span>回答模板</span>
+          </div>
+        </article>
+
+        <article class="panel documents-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">02 · SKILLS</span>
+              <h2>Skill 列表</h2>
+              <p>发布后才能在对话中使用。</p>
+            </div>
+          </div>
+          <div id="skillList" class="document-list"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="/api.js"></script>
+  <script src="/skills.js"></script>
+</body>
+</html>

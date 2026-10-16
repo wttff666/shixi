@@ -1,0 +1,11 @@
+fastapi==0.143.0
+uvicorn[standard]==0.54.0
+python-multipart==0.0.32
+SQLAlchemy==2.1.4
+aiosqlite==0.22.1
+python-docx==1.2.0
+PyMuPDF==1.28.2
+pdfplumber==0.11.10
+python-dotenv==1.2.4
+pytest==9.1.1
+httpx==0.28.1

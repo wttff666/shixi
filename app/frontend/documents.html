@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>知识库与资料 · 远程诊断客服平台</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="/">
+        <span class="brand-mark">诊</span>
+        <span class="brand-copy">
+          <strong>远程诊断客服平台</strong>
+          <small>知识库管理</small>
+        </span>
+      </a>
+      <a class="new-chat" href="/">返回对话</a>
+      <nav class="admin-nav">
+        <a href="/service">服务工单</a>
+        <a class="active" href="/documents">知识库与资料</a>
+        <a href="/skills">诊断 Skill</a>
+        <a href="/users" data-sysadmin>用户管理</a>
+      </nav>
+      <button id="logoutButton" class="logout-button" type="button">退出登录</button>
+      <section class="admin-note">
+        <strong>当前范围</strong>
+        <p>支持 TXT、Markdown、DOCX、文字版 PDF。扫描版 PDF 会标记为需要 OCR。</p>
+      </section>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-header">
+        <div>
+          <span class="eyebrow">Knowledge Base · Document Pipeline</span>
+          <h1>知识库与资料</h1>
+          <p>上传故障树、手册与服务通报，解析切片、预览确认后再发布到检索库。</p>
+        </div>
+        <button id="refreshDocuments" class="secondary-button" type="button">刷新</button>
+      </header>
+
+      <section class="stats-row">
+        <article class="stat-card"><span>文档总数</span><strong id="documentTotal">0</strong></article>
+        <article class="stat-card"><span>待发布</span><strong id="documentDraft">0</strong></article>
+        <article class="stat-card"><span>已发布</span><strong id="documentPublished">0</strong></article>
+        <article class="stat-card"><span>需要 OCR</span><strong id="documentOcr">0</strong></article>
+      </section>
+
+      <section class="admin-grid">
+        <article class="panel upload-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">01 · UPLOAD</span>
+              <h2>上传并切片</h2>
+              <p>文件先进入预览状态，不会立即影响对话检索。</p>
+            </div>
+          </div>
+          <form id="uploadForm" class="upload-form">
+            <label id="dropZone" class="drop-zone" for="documentFile">
+              <input id="documentFile" name="file" type="file" accept=".txt,.md,.docx,.pdf" hidden>
+              <strong>选择或拖入文档</strong>
+              <span>支持 TXT、Markdown、DOCX、PDF，单文件不超过 30 MB</span>
+              <em id="selectedFile">尚未选择文件</em>
+            </label>
+
+            <div class="form-grid">
+              <label>
+                <span>切片方式</span>
+                <select id="chunkStrategy">
+                  <option value="punctuation">按标点切片</option>
+                  <option value="paragraph">按段落切片</option>
+                  <option value="heading">按标题切片</option>
+                  <option value="fixed">按固定长度切片</option>
+                </select>
+              </label>
+              <label>
+                <span>最大字符数</span>
+                <input id="maxChars" type="number" min="100" max="5000" value="800">
+              </label>
+              <label>
+                <span>重叠字符数</span>
+                <input id="overlapChars" type="number" min="0" max="1000" value="100">
+              </label>
+            </div>
+
+            <div class="upload-progress" id="uploadProgress" hidden>
+              <div><span id="uploadProgressBar"></span></div>
+              <small id="uploadProgressText">正在上传</small>
+            </div>
+
+            <button id="uploadButton" class="send-button" type="submit">上传并解析</button>
+          </form>
+        </article>
+
+        <article class="panel documents-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">02 · DOCUMENTS</span>
+              <h2>文档列表</h2>
+              <p>预览切片、重新处理和发布知识库。</p>
+            </div>
+          </div>
+          <div id="documentList" class="document-list"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <aside id="chunkDrawer" class="drawer" hidden>
+    <header class="drawer-header">
+      <div>
+        <strong id="chunkDrawerTitle">切片预览</strong>
+        <span id="chunkDrawerMeta"></span>
+      </div>
+      <button id="chunkDrawerClose" class="icon-button" type="button" aria-label="关闭">×</button>
+    </header>
+    <div id="chunkList" class="chunk-list"></div>
+  </aside>
+
+  <aside id="ocrDrawer" class="drawer" hidden>
+    <header class="drawer-header">
+      <div>
+        <strong id="ocrDrawerTitle">OCR 校对</strong>
+        <span id="ocrDrawerMeta"></span>
+      </div>
+      <button id="ocrDrawerClose" class="icon-button" type="button" aria-label="关闭">×</button>
+    </header>
+    <div class="ocr-editor-toolbar">
+      <span>修改识别错误后保存，系统会重新切片。</span>
+      <button id="saveOcrPages" class="send-button" type="button">保存并重新切片</button>
+    </div>
+    <div id="ocrPageList" class="ocr-page-list"></div>
+  </aside>
+
+  <div id="toast" class="toast" role="status"></div>
+  <script src="/api.js"></script>
+  <script src="/documents.js"></script>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>方案 A · 内部工具风格</title>
+<style>
+  :root{
+    --bg:#f4f5f7; --panel:#fff; --line:#e2e5ea; --line-strong:#cfd4dc;
+    --ink:#1c2430; --ink-2:#5a6473; --ink-3:#8a93a1;
+    --brand:#14586b; --brand-soft:#e7f0f2;
+    --amber:#9a6708; --amber-bg:#fdf5e3;
+    --red:#a52a2a; --red-bg:#fbeded;
+    --green:#1f6b3a; --green-bg:#e9f4ec;
+    --blue:#1b4f8a; --blue-bg:#e9f0f9;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{
+    font:13px/1.55 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+    color:var(--ink);background:var(--bg);
+    display:grid;grid-template-rows:46px 1fr;height:100vh;overflow:hidden;
+  }
+  .mono{font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;font-variant-numeric:tabular-nums}
+
+  /* 顶部工单上下文条：常驻，不可隐藏 */
+  .ctx{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:0 14px;background:var(--panel);border-bottom:1px solid var(--line-strong);
+  }
+  .ctx-l,.ctx-r{display:flex;align-items:center;gap:10px;min-width:0}
+  .ticket{font-weight:700;letter-spacing:.02em}
+  .sep{width:1px;height:16px;background:var(--line-strong)}
+  .dim{color:var(--ink-2)}
+  .pill{
+    padding:1px 8px;border-radius:3px;font-size:11px;font-weight:600;white-space:nowrap;
+  }
+  .p-wait{background:var(--amber-bg);color:var(--amber)}
+  .p-high{background:var(--red-bg);color:var(--red)}
+  .p-ok{background:var(--green-bg);color:var(--green)}
+  .p-info{background:var(--blue-bg);color:var(--blue)}
+  .countdown{color:var(--red);font-weight:600}
+  .btn{
+    font:inherit;font-size:12px;padding:4px 10px;border:1px solid var(--line-strong);
+    background:#fff;border-radius:4px;color:var(--ink);cursor:pointer;
+  }
+  .btn-primary{background:var(--brand);border-color:var(--brand);color:#fff}
+
+  .main{display:grid;grid-template-columns:200px minmax(0,1fr) 372px;min-height:0}
+
+  /* 左栏：导航 + 我的工单队列 */
+  .nav{background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+  .brand{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line)}
+  .mark{width:24px;height:24px;border-radius:4px;background:var(--brand);color:#fff;
+    display:grid;place-items:center;font-size:12px;font-weight:700}
+  .brand b{font-size:13px}
+  .brand small{display:block;color:var(--ink-3);font-size:11px;font-weight:400}
+  .nav-group{padding:10px 8px 4px}
+  .nav-title{font-size:11px;color:var(--ink-3);padding:4px 6px;letter-spacing:.04em}
+  .nav-item{display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:4px;color:var(--ink-2);font-size:12.5px}
+  .nav-item.active{background:var(--brand-soft);color:var(--brand);font-weight:600}
+  .queue{flex:1;min-height:0;overflow:auto;border-top:1px solid var(--line)}
+  .q-row{padding:8px 12px;border-bottom:1px solid var(--line);cursor:pointer}
+  .q-row.active{background:var(--brand-soft);box-shadow:inset 2px 0 0 var(--brand)}
+  .q-top{display:flex;justify-content:space-between;gap:8px;align-items:center}
+  .q-no{font-weight:600;font-size:12px}
+  .q-meta{color:var(--ink-3);font-size:11.5px;margin-top:1px}
+
+  /* 中栏：会话 */
+  .chat{display:flex;flex-direction:column;min-height:0;background:var(--bg)}
+  .chat-head{padding:10px 16px 0;color:var(--ink-3);font-size:11.5px}
+  .stream{flex:1;min-height:0;overflow:auto;padding:10px 16px}
+  .turn{max-width:680px;margin-bottom:14px}
+  .turn.user{margin-left:auto;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px 12px}
+  .who{font-size:11px;color:var(--ink-3);margin-bottom:3px}
+  .steps{margin:6px 0 0;padding-left:18px;color:var(--ink-2)}
+  .steps li{margin:2px 0}
+  .ask{border-left:2px solid var(--amber);background:var(--amber-bg);padding:8px 12px;margin-top:10px;border-radius:0 4px 4px 0}
+  .ask b{color:var(--amber)}
+  .composer{border-top:1px solid var(--line-strong);background:var(--panel);padding:10px 16px}
+  .composer textarea{
+    width:100%;height:46px;resize:none;border:1px solid var(--line-strong);border-radius:4px;
+    padding:8px 10px;font:inherit;color:var(--ink);
+  }
+  .composer-row{display:flex;justify-content:space-between;align-items:center;margin-top:6px;color:var(--ink-3);font-size:11.5px}
+
+  /* 右栏：结论与输出 */
+  .side{background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+  .side-tabs{display:flex;gap:2px;padding:8px 10px 0;border-bottom:1px solid var(--line)}
+  .tab{padding:5px 10px;font-size:12px;color:var(--ink-2);border-bottom:2px solid transparent;cursor:pointer}
+  .tab.on{color:var(--brand);border-color:var(--brand);font-weight:600}
+  .side-body{flex:1;min-height:0;overflow:auto;padding:12px}
+  .verdict{border:1px solid var(--line-strong);border-radius:5px;overflow:hidden}
+  .verdict-top{padding:10px 12px;border-bottom:1px solid var(--line)}
+  .verdict-top h2{margin:0;font-size:17px;letter-spacing:0}
+  .verdict-top h2 span{color:var(--ink-2);font-size:12px;font-weight:500;margin-right:6px}
+  .verdict-tags{display:flex;gap:6px;margin-top:6px}
+  .kv{display:grid;grid-template-columns:76px 1fr;gap:4px 10px;padding:10px 12px;font-size:12.5px}
+  .kv dt{color:var(--ink-3)}
+  .kv dd{margin:0}
+  .block{border:1px solid var(--line);border-radius:5px;margin-top:10px;overflow:hidden}
+  .block > h3{margin:0;padding:8px 12px;font-size:12px;background:#fafbfc;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .block .pad{padding:10px 12px}
+  .dispatch{display:grid;grid-template-columns:88px 1fr;gap:5px 10px;font-size:12.5px}
+  .dispatch dt{color:var(--ink-3)}
+  .dispatch dd{margin:0}
+  .tag-internal{background:var(--red-bg);color:var(--red);font-size:10.5px;font-weight:700;
+    padding:1px 6px;border-radius:3px;letter-spacing:.03em}
+  .internal{border:1px solid #eddcc4;background:var(--amber-bg);border-radius:5px;margin-top:10px;overflow:hidden}
+  .internal > h3{margin:0;padding:8px 12px;font-size:12px;background:#fdf0d9;border-bottom:1px solid #eddcc4;
+    display:flex;align-items:center;justify-content:space-between}
+  .internal ul{margin:0;padding:8px 12px 10px 26px;font-size:12.5px}
+  .internal li{margin:3px 0}
+  .reply{border:1px solid #d6e3d6;border-radius:5px;margin-top:10px;overflow:hidden}
+  .reply > h3{margin:0;padding:8px 12px;font-size:12px;background:var(--green-bg);border-bottom:1px solid #d6e3d6;
+    display:flex;align-items:center;justify-content:space-between}
+  .reply pre{margin:0;padding:10px 12px;font:12.5px/1.65 inherit;white-space:pre-wrap}
+  .refs{margin:0;padding:8px 12px 10px 26px;font-size:12px;color:var(--ink-2)}
+  .refs li{margin:3px 0}
+</style>
+</head>
+<body>
+
+<header class="ctx">
+  <div class="ctx-l">
+    <span class="ticket mono">SR-2026-0001</span>
+    <span class="sep"></span>
+    <span>镇江精工注塑厂</span>
+    <span class="sep"></span>
+    <span class="dim">M001 · IMP-160T · 1 号线</span>
+    <span class="pill p-wait">待派工</span>
+    <span class="pill p-high">高</span>
+  </div>
+  <div class="ctx-r">
+    <span class="mono dim">SLA-A 4h/24h</span>
+    <span class="sep"></span>
+    <span class="countdown mono">剩余 18h 42m</span>
+    <button class="btn">二线复核</button>
+    <button class="btn btn-primary">生成派工单</button>
+  </div>
+</header>
+
+<div class="main">
+
+  <nav class="nav">
+    <div class="brand">
+      <div class="mark">诊</div>
+      <b>远程诊断客服平台<small>注塑机产品线</small></b>
+    </div>
+    <div class="nav-group">
+      <div class="nav-title">工作台</div>
+      <div class="nav-item active">服务工单　<span class="mono dim">6</span></div>
+      <div class="nav-item">诊断会话</div>
+      <div class="nav-item">设备档案</div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-title">资料</div>
+      <div class="nav-item">知识库与资料</div>
+      <div class="nav-item">诊断 Skill</div>
+      <div class="nav-item">服务通报</div>
+    </div>
+    <div class="nav-title" style="padding:10px 14px 4px">我的工单　<span class="dim mono">6</span></div>
+    <div class="queue">
+      <div class="q-row active">
+        <div class="q-top"><span class="q-no mono">SR-2026-0001</span><span class="pill p-wait">待派工</span></div>
+        <div class="q-meta">M001 · 镇江精工注塑厂</div>
+        <div class="q-meta">F03 液压油温过高 · 建议到场</div>
+      </div>
+      <div class="q-row">
+        <div class="q-top"><span class="q-no mono">SR-2026-0002</span><span class="pill p-info">待研判</span></div>
+        <div class="q-meta">M006 · 苏州宏兴家电部件</div>
+        <div class="q-meta">平台提示离线 · 未研判</div>
+      </div>
+      <div class="q-row">
+        <div class="q-top"><span class="q-no mono">SR-2026-0003</span><span class="pill p-ok">已派工</span></div>
+        <div class="q-meta">M013 · 成都天元包装制品</div>
+        <div class="q-meta">F01 料筒加热圈断路 · 已出发</div>
+      </div>
+      <div class="q-row">
+        <div class="q-top"><span class="q-no mono">SR-2026-0004</span><span class="pill p-wait">待派工</span></div>
+        <div class="q-meta">M016 · 武汉长江电子科技</div>
+        <div class="q-meta">F05 油泵电机过载 · 建议到场</div>
+      </div>
+      <div class="q-row">
+        <div class="q-top"><span class="q-no mono">SR-2026-0005</span><span class="pill p-info">待研判</span></div>
+        <div class="q-meta">M007 · 东莞长信精密塑胶</div>
+        <div class="q-meta">冷却水流量低 · 未研判</div>
+      </div>
+    </div>
+  </nav>
+
+  <section class="chat">
+    <div class="chat-head">
+      诊断会话 · agent01（客服工程师）· 接单 19:37
+    </div>
+    <div class="stream">
+      <div class="turn user">
+        <div class="who">客户口述</div>
+        油温高报警，运行两个多小时后触发，冷却水进水温度正常。
+      </div>
+
+      <div class="turn">
+        <div class="who">诊断助手 · 已调用 9 个只读工具</div>
+        <div>结论：判定为 <b>F03 液压油温过高</b>（严重度高），根因指向冷却器脏堵导致换热能力下降，本次属保修内免费。</div>
+        <ol class="steps">
+          <li>先测冷却水进水温度与流量，判断水路是否正常 [1]。</li>
+          <li>再摸冷却器进出油管温差，温差小即印证换热效率不足 [1]。</li>
+          <li>检查油位与油质，并核对背压阀设定是否过高 [1]。</li>
+          <li>清洗冷却器；必要时更换液压油滤芯 P-1303，保修内免费 [1][2]。</li>
+          <li>处理后待油温降至 50℃ 以下再手动复位，观察 30 分钟。</li>
+        </ol>
+        <div class="ask">
+          <b>需向客户补充确认：</b>① 冷却水进出水温差具体数值；② 油温是运行数小时后才升，还是开机即偏高。
+        </div>
+      </div>
+    </div>
+    <div class="composer">
+      <textarea placeholder="输入客户描述，或追问客户后继续研判…"></textarea>
+      <div class="composer-row">
+        <span>已关联工单 SR-2026-0001 · 设备 M001 · 检索范围：已发布知识库</span>
+        <span><button class="btn">停止</button> <button class="btn btn-primary">继续研判</button></span>
+      </div>
+    </div>
+  </section>
+
+  <aside class="side">
+    <div class="side-tabs">
+      <div class="tab on">结论与派工</div>
+      <div class="tab">依据 5</div>
+      <div class="tab">历史工单 3</div>
+    </div>
+    <div class="side-body">
+
+      <div class="verdict">
+        <div class="verdict-top">
+          <h2><span>F03</span>液压油温过高</h2>
+          <div class="verdict-tags">
+            <span class="pill p-ok">置信 高</span>
+            <span class="pill p-high">需到场</span>
+            <span class="pill p-info">保修内免费</span>
+          </div>
+        </div>
+        <dl class="kv">
+          <dt>手册章节</dt><dd class="mono">4.2.1</dd>
+          <dt>严重度</dt><dd>高</dd>
+          <dt>复位方式</dt><dd>油温降至 50℃ 以下后手动复位</dd>
+        </dl>
+      </div>
+
+      <div class="block">
+        <h3>派工建议 <span class="pill p-wait">建议二线复核</span></h3>
+        <div class="pad">
+          <dl class="dispatch">
+            <dt>处理方式</dt><dd>上门处理</dd>
+            <dt>判定依据</dt><dd>冷却器脏堵需现场清洗与更换滤芯</dd>
+            <dt>服务等级</dt><dd class="mono">SLA-A · 4h 响应 / 24h 到场</dd>
+            <dt>预计工时</dt><dd class="mono">3.5–4.5 h</dd>
+            <dt>工时依据</dt><dd>同类历史工单 5 条，平均 4.1 h</dd>
+            <dt>建议备件</dt><dd class="mono">P-1303 液压油滤芯 · 库存 40 · 货期 7 天</dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="internal">
+        <h3>内部备注 <span class="tag-internal">仅内部 · 勿外发</span></h3>
+        <ul>
+          <li>风险：油温持续偏高会加速密封老化，引发压力波动与泄漏。</li>
+          <li>结算：保修内免费（服务等级 SLA-A）。</li>
+          <li>服务通报 SB-2025-018（有效期至 2026-06-30）：压力波动并伴随泵体异响时优先核对。</li>
+          <li>待补信息：冷却水进出水温差、油温起升时间点。</li>
+        </ul>
+      </div>
+
+      <div class="reply">
+        <h3>对客户说明 <button class="btn">复制</button></h3>
+        <pre>【设备服务初步反馈】
+设备：M001（IMP-160T）
+位置：一号注塑车间 1 号线
+您反馈的情况：油温高报警，运行两个多小时后触发
+初步判断：液压油温过高，依据手册 4.2.1
+建议处理：油温降至 50℃ 以下后手动复位
+安排：需要我方工程师到场处理，我们会与您确认时间
+说明：以上为初步判断，最终以现场确认为准。</pre>
+      </div>
+
+      <div class="block">
+        <h3>依据引用</h3>
+        <ul class="refs">
+          <li>[1] 故障树 · 4.2.1 液压油温过高</li>
+          <li>[2] 历史工单 · ZJ-2026-0015 · 4.2.1</li>
+        </ul>
+      </div>
+
+    </div>
+  </aside>
+</div>
+</body>
+</html>

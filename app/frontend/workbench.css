@@ -1,0 +1,711 @@
+/* 诊断工作台布局 + 工单/门户共用的组件样式。
+   颜色统一取自 styles.css 的 :root 变量。 */
+
+/* ---------- 布局 ---------- */
+.wb {
+  display: grid;
+  grid-template-columns: 236px minmax(0, 1fr);
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.wb-nav {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  gap: 4px;
+  padding: 16px 12px;
+  background: var(--sidebar);
+  border-right: 1px solid var(--line);
+}
+
+.wb-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 6px 14px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.wb-brand .brand-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  font-size: 15px;
+}
+
+.wb-brand b {
+  display: block;
+  font-size: 13.5px;
+  line-height: 1.3;
+}
+
+.wb-brand small {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.wb-nav-title {
+  padding: 12px 10px 6px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+
+.wb-nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 11px;
+  border-radius: 9px;
+  color: var(--ink-2, #46536b);
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.wb-nav-item:hover {
+  background: var(--surface-soft);
+  color: var(--ink);
+}
+
+.wb-nav-item.active {
+  background: var(--brand-soft);
+  color: var(--brand-deep);
+  font-weight: 600;
+}
+
+.wb-queue {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  margin-top: 2px;
+}
+
+.q-item {
+  display: block;
+  width: 100%;
+  padding: 9px 11px;
+  margin-bottom: 4px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  text-align: left;
+  color: inherit;
+}
+
+.q-item:hover {
+  background: var(--surface-soft);
+}
+
+.q-item.active {
+  background: var(--surface);
+  border-color: var(--line);
+  box-shadow: var(--shadow);
+}
+
+.q-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.q-no {
+  font-family: ui-monospace, Consolas, "Cascadia Mono", monospace;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.q-meta {
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.5;
+  margin-top: 2px;
+}
+
+.wb-logout {
+  margin-top: 8px;
+  min-height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 12.5px;
+}
+
+.wb-logout:hover {
+  background: var(--surface-soft);
+}
+
+.wb-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  padding: 16px 20px 0;
+  gap: 12px;
+}
+
+/* ---------- 工单头部 ---------- */
+.wb-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.wb-head h1 {
+  margin: 0;
+  font-size: 21px;
+  letter-spacing: 0;
+}
+
+.wb-head .sub {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.wb-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 9px;
+}
+
+.wb-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.wb-actions select {
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 12.5px;
+  padding: 7px 9px;
+}
+
+/* ---------- 诊断进度 ---------- */
+.wb-progress {
+  display: flex;
+  align-items: center;
+  padding: 11px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+
+.step .dot {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  font-size: 10px;
+}
+
+.step.done {
+  color: var(--brand-deep);
+}
+
+.step.done .dot {
+  color: #fff;
+  background: var(--brand);
+  border-color: var(--brand);
+}
+
+.step.active .dot {
+  color: var(--brand);
+  border-color: var(--brand);
+}
+
+.step-bar {
+  flex: 1;
+  height: 1.5px;
+  margin: 0 10px;
+  background: var(--line);
+}
+
+.step-bar.done {
+  background: var(--brand);
+}
+
+/* ---------- 两栏主体 ---------- */
+.wb-cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 396px;
+  gap: 14px;
+  flex: 1;
+  min-height: 0;
+  padding-bottom: 16px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  box-shadow: var(--shadow);
+}
+
+.wb-chat {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.chat-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.chat-head .avatar {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--brand-soft);
+  color: var(--brand-deep);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.chat-head b {
+  font-size: 13px;
+}
+
+.chat-head span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.stream {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.turn {
+  margin-bottom: 14px;
+}
+
+.who {
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.bubble {
+  max-width: 82%;
+  padding: 11px 15px;
+  border-radius: 13px;
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+
+.bubble.me {
+  margin-left: auto;
+  background: var(--brand-soft);
+  border-bottom-right-radius: 4px;
+}
+
+.bubble.bot {
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-bottom-left-radius: 4px;
+}
+
+.bubble.bot h1,
+.bubble.bot h2,
+.bubble.bot h3,
+.bubble.bot h4 {
+  margin: 10px 0 6px;
+  font-size: 13.5px;
+}
+
+.bubble.bot p {
+  margin: 6px 0;
+}
+
+.bubble.bot ul,
+.bubble.bot ol {
+  margin: 6px 0;
+  padding-left: 20px;
+}
+
+.bubble.bot li {
+  margin: 3px 0;
+}
+
+.bubble.bot pre {
+  margin: 8px 0;
+  padding: 9px 11px;
+  border-radius: 8px;
+  background: #eef1f6;
+  font-size: 12.5px;
+  overflow-x: auto;
+}
+
+.bubble.bot code {
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: #eef1f6;
+  font-size: 12.5px;
+}
+
+.message-status {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.hint-box {
+  margin-top: 10px;
+  padding: 11px 13px;
+  border: 1px solid var(--amber-soft);
+  border-left: 3px solid var(--amber);
+  border-radius: 0 10px 10px 0;
+  background: var(--amber-soft);
+  font-size: 13px;
+}
+
+.hint-box b {
+  color: var(--amber);
+}
+
+.composer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--line);
+}
+
+.composer textarea {
+  width: 100%;
+  min-height: 44px;
+  max-height: 160px;
+  resize: none;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 13.5px;
+}
+
+.composer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.composer-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  padding: 7px 13px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 12.5px;
+}
+
+.btn:hover {
+  background: var(--surface-soft);
+}
+
+.btn-primary {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: #fff;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  background: var(--brand-deep);
+}
+
+.btn:disabled {
+  opacity: .55;
+}
+
+/* ---------- 右栏卡片 ---------- */
+.wb-side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.card-pad {
+  padding: 14px 16px;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 16px 0;
+}
+
+.card-head h3 {
+  margin: 0;
+  font-size: 13.5px;
+}
+
+.card-body {
+  padding: 10px 16px 14px;
+}
+
+.kicker {
+  color: var(--muted);
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.verdict-title {
+  margin: 5px 0 9px;
+  font-size: 19px;
+  letter-spacing: 0;
+}
+
+.verdict-title span {
+  margin-right: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.kv,
+.dispatch-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 16px;
+  margin: 11px 0 0;
+  font-size: 13px;
+}
+
+.kv dt,
+.dispatch-grid dt {
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.kv dd,
+.dispatch-grid dd {
+  margin: 0;
+  word-break: break-word;
+}
+
+.num {
+  font-family: ui-monospace, Consolas, "Cascadia Mono", monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.internal-block {
+  border-color: #f0dcc0;
+  background: var(--amber-soft);
+}
+
+.internal-block ul {
+  margin: 0;
+  padding: 0 16px 14px 30px;
+  font-size: 13px;
+}
+
+.internal-block li {
+  margin: 4px 0;
+}
+
+.tag-internal,
+.lock {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--red);
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.reply-block {
+  border-color: #cfdff5;
+  background: #f2f7fe;
+}
+
+.reply-block pre {
+  margin: 0;
+  padding: 0 16px 14px;
+  font: 13px/1.7 inherit;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.refs {
+  margin: 0;
+  padding: 0 16px 14px 30px;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.refs li {
+  margin: 4px 0;
+}
+
+.empty-note {
+  padding: 14px 16px;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+/* ---------- 状态徽章 ---------- */
+.badge,
+.pill {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge-high {
+  background: #e8effc;
+  color: #17479f;
+}
+
+.badge-medium {
+  background: #fdf2dc;
+  color: #96660d;
+}
+
+.badge-low,
+.badge-undetermined {
+  background: #f1f2f4;
+  color: #5c6470;
+}
+
+.badge-onsite,
+.badge-danger {
+  background: #fde6e6;
+  color: #ad2b2b;
+}
+
+.badge-remote,
+.badge-info {
+  background: #e6f0fb;
+  color: #17558f;
+}
+
+/* ---------- 工单台/门户共用 ---------- */
+.dispatch-block {
+  padding-bottom: 12px;
+}
+
+.dispatch-note {
+  margin: 0 16px 12px;
+  padding: 9px 11px;
+  border-left: 3px solid var(--amber);
+  background: var(--amber-soft);
+  font-size: 12.5px;
+}
+
+.diagnosis-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px 18px;
+  margin: 0;
+  padding: 12px 16px;
+  font-size: 13px;
+}
+
+.diagnosis-grid dt {
+  margin-bottom: 2px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.diagnosis-grid dd {
+  margin: 0;
+  word-break: break-word;
+}
+
+.diagnosis-block {
+  padding: 0 16px 12px;
+  font-size: 13px;
+}
+
+.diagnosis-block h4 {
+  margin: 10px 0 6px;
+  font-size: 13px;
+  color: var(--ink-2, #46536b);
+}
+
+.diagnosis-block ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.portal-reply {
+  grid-column: 1 / -1;
+  margin: 10px 0 0;
+  padding: 11px 13px;
+  border-radius: 9px;
+  background: var(--surface-soft);
+  font: 12.5px/1.65 inherit;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.document-card {
+  flex-wrap: wrap;
+}
+
+@media (max-width: 1180px) {
+  .wb-cols {
+    grid-template-columns: minmax(0, 1fr);
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 900px) {
+  .wb {
+    grid-template-columns: 200px minmax(0, 1fr);
+  }
+
+  .step span:not(.dot) {
+    display: none;
+  }
+}
